@@ -1,0 +1,25 @@
+{
+  "name": "@swift-developer/swifty-core",
+  "version": "0.0.6",
+  "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
+  "main": "./distribution/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel core --presets babel-preset-es2017 --out-dir distribution",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git-codecommit.us-west-2.amazonaws.com/v1/repos/swifty-core"
+  },
+  "author": "Taylor Brooks",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2017": "^6.16.0",
+    "babel-preset-latest": "^6.16.0"
+  },
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
