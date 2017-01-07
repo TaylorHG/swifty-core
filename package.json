@@ -1,8 +1,8 @@
 {
   "name": "@swift-developer/swifty-core",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
-  "main": "./distribution/index.js",
+  "main": "./distribution/core.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel core --presets babel-preset-es2017 --out-dir distribution",
