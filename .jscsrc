@@ -19,5 +19,6 @@
   "disallowNestedTernaries": true,
   "disallowOperatorBeforeLineBreak": false,
   "disallowQuotedKeysInObjects": true,
-  "requireShorthandArrowFunctions": false
+  "requireShorthandArrowFunctions": false,
+  "disallowMultipleVarDecl": false
 }

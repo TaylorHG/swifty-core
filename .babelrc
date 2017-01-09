@@ -1,6 +1,5 @@
 {
-  "presets": ["latest"],
-  "ignore": [
-    "node_modules"
+  "presets": [
+    "swifty"
   ]
 }

@@ -1,2 +1,10 @@
 core/
 node_modules/
+develop.js
+debug.js
+.jscsrc
+.babelrc
+.eslintrc.js
+dist/
+app/
+.DS_Store
