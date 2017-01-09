@@ -2,9 +2,8 @@ import fs from 'fs';
 import SwiftyObject from '@swift-developer/swifty-objects';
 
 // import resolver related modules
-import LayerLoader from './resolver/layer-loader';
-import RequestPath from './resolver/request-path';
-import LayerStore from './resolver/layer-store';
+import LayerLoader from './layer-loader';
+import LayerStore from './layer-store';
 
 export default class Resolver extends SwiftyObject {
 

@@ -1,3 +1,6 @@
+/**
+ * Store to hold raw Layer prototypes that have been loaded by the Resolver.
+ */
 export default class LayerStore {
   constructor() {
     this.layerMap = {};

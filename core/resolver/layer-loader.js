@@ -3,6 +3,11 @@ import pathModule from 'path';
 
 export default class LayerLoader {
 
+  /**
+   * load all modules under the given path
+   * @param {String} to read files from
+   * @returns {Promise} promise that resolves with all modules under the requested path.
+   */
   loadLayers(path) {
     var _this = this;
     this.layers = [];
@@ -40,17 +45,23 @@ export default class LayerLoader {
   }
 }
 
+/**
+ * Container for a Layer that contains the Layer itself, as welll as some meta data
+ */
 export class LayerContainer {
   constructor(layer, path) {
     this.layer = layer;
     this.path = path;
   }
 
+  /**
+   * gets filename, set when the layer was loaded originally by the LayerLoader.
+   *
+   * ex. "haywyre-is-awesome.js"
+   *
+   * @returns {String} the filename for the layer inside this container.
+   */
   getFileName() {
     return /[^\/]*\.js$/.exec(this.path)[0].replace(/.js$/, '');
-  }
-
-  parseLayerKey() {
-    var fileName = this.getFileName();
   }
 }
