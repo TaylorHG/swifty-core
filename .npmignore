@@ -1,6 +1,5 @@
 core/
 node_modules/
-develop.js
 debug.js
 .jscsrc
 .babelrc
@@ -8,3 +7,5 @@ debug.js
 dist/
 app/
 .DS_Store
+test-app/
+npm-debug.log

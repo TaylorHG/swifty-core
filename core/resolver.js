@@ -19,7 +19,7 @@ export default class Resolver extends SwiftyObject {
 
       // register all layers within the current application and load them
       // into this Resolver's layerStore for instantiation later.
-      layerLoader.loadLayers(`${process.cwd()}/dist`).then((layers) => {
+      layerLoader.loadLayers(`${process.cwd()}/dist/app`).then((layers) => {
         this.set('layerStore', new LayerStore);
 
         if (layers.length === 0) {

@@ -8,7 +8,7 @@
     "build": "babel core --out-dir distribution",
     "prepublish": "npm run build",
     "develop": "babel-watch app/develop.js",
-    "debug": "npm run build && babel app --out-dir dist && node --inspect app/debug.js"
+    "debug": "npm run build && babel test-app --out-dir dist && cp test-app/app-config.json dist && node --inspect debug.js"
   },
   "repository": {
     "type": "git",
