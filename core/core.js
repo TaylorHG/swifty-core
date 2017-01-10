@@ -4,7 +4,6 @@ import SwiftyObject from '@swift-developer/swifty-objects';
 
 import Resolver from './resolver/resolver';
 import RequestHandler from './request-handler';
-import AppWatcher from './app-watcher';
 
 export default class SwiftyCore extends SwiftyObject {
   constructor() {
@@ -33,8 +32,6 @@ export default class SwiftyCore extends SwiftyObject {
       // create request handler
       var requestHandler = new RequestHandler(_this.get('resolver'), _this.get('httpManager'));
 
-      // watch files for changes and load changes into resolver
-      new AppWatcher(_this.get('resolver')).watchApp();
       console.log('Application Built!\n\n\n');
 
       // configure connect.js to respond to all requests using the request handler

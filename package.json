@@ -18,6 +18,7 @@
   "license": "MIT",
   "devDependencies": {
     "@swift-developer/swifty-rest": "0.0.7",
+    "@swift-developer/swifty-watcher": "0.0.3",
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",
     "eslint": "^3.13.0"
@@ -29,7 +30,6 @@
     "babel-preset-swifty": "0.0.7",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
-    "express": "^4.14.0",
-    "watch": "^1.0.1"
+    "express": "^4.14.0"
   }
 }
