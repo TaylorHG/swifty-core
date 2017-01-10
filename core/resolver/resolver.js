@@ -18,7 +18,7 @@ export default class Resolver extends SwiftyObject {
 
       // register all layers within the current application and load them
       // into this Resolver's layerStore for instantiation later.
-      layerLoader.loadLayers(`${process.cwd()}/dist/app`).then((layers) => {
+      layerLoader.loadLayers(`${process.cwd()}/dist`).then((layers) => {
         this.set('layerStore', new LayerStore);
 
         if (layers.length === 0) {
@@ -35,6 +35,44 @@ export default class Resolver extends SwiftyObject {
         console.error('Failed to load layers... :(');
       });
     })
+  }
+
+  /**
+   * Use the FileLoader to load in a layer by filename. File must have been written in ES7 (swifty).
+   * If the Layer already exists inside the store, it will replace what it currently has with the new Layer.
+   * @param {String} fileName of file to load.
+   * @returns {Promise} that resolves with the loaded Layer.
+   */
+  addLayerByFileName(fileName) {
+    return new Promise((resolve, reject) => {
+      new LayerLoader().loadRawLayer(fileName).then((layerContainer) => {
+        this.get('layerStore').registerLayer(layerContainer);
+        resolve(layerContainer);
+      }, reject);
+    });
+  }
+
+  /**
+   * Use the FileLoader to remove a layer by filename. File must have been written in ES7 (swifty).
+   * If the Layer already exists inside the store, it will delete that Layer from the store.
+   * @param {String} fileName of the file to remove
+   * @returns {Promise} that resolves with the removed Layer.
+   */
+  removeLayerByFileName(fileName) {
+    // get compiled version of the file as the raw babel-script and uncompiled version might no longer exist (it could have been deleted).
+    var regex = new RegExp("^" + `${process.cwd()}/app`);
+    var fileNameToRemove = `${process.cwd()}/dist${fileName.replace(regex, '')}`;
+    return new Promise((resolve, reject) => {
+      var layerLoader = new LayerLoader()
+      var layerContainer = layerLoader.loadLayer(fileNameToRemove);
+      layerLoader.unlinkLayer(fileNameToRemove).then(() => {
+        if (this.get('layerStore').deregisterLayer(layerContainer)) {
+          resolve(layerContainer);
+        } else {
+          reject(new Error(`${layerContainer.type}:${layerContainer.name} failed to be deregisted.`))
+        }
+      }, reject);
+    });
   }
 
   /**

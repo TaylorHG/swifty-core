@@ -7,5 +7,4 @@ debug.js
 dist/
 app/
 .DS_Store
-test-app/
 npm-debug.log

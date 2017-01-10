@@ -5,10 +5,10 @@
   "main": "./distribution/core.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel core --out-dir distribution",
+    "build": "babel core --out-dir distribution -q",
     "prepublish": "npm run build",
     "develop": "babel-watch app/develop.js",
-    "debug": "npm run build && babel test-app --out-dir dist && cp test-app/app-config.json dist && node --inspect debug.js"
+    "debug": "npm run build && babel app --out-dir dist -q && cp app/app-config.json dist && node --inspect debug.js"
   },
   "repository": {
     "type": "git",
@@ -19,16 +19,17 @@
   "devDependencies": {
     "@swift-developer/swifty-rest": "0.0.7",
     "babel-cli": "^6.18.0",
-    "babel-core": "^6.21.0",
     "babel-eslint": "^7.1.1",
-    "babel-preset-swifty": "0.0.7",
-    "babel-watch": "^2.0.5",
     "eslint": "^3.13.0"
   },
   "dependencies": {
     "@swift-developer/swifty-objects": "0.0.1",
+    "colors": "^1.1.2",
+    "babel-core": "^6.21.0",
+    "babel-preset-swifty": "0.0.7",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "watch": "^1.0.1"
   }
 }
