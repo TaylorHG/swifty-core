@@ -2,6 +2,7 @@ import fs from 'fs';
 import pathModule from 'path';
 var babel = require('babel-core');
 import babelPresetSwifty from 'babel-preset-swifty';
+import LayerContainer from './layer-container';
 
 export default class LayerLoader {
 
@@ -61,7 +62,20 @@ export default class LayerLoader {
     if (require.cache[filePath]) {
       delete require.cache[filePath]
     }
-    return new LayerContainer(require(filePath), filePath);
+
+    var layer = require(filePath);
+
+    if (layer.default === undefined) {
+        console.error(`Module (found in ${filePath}) was not exported as default, therefore it will not be handled by the Resolver.`);
+        return false;
+    }
+
+    if (layer.default.prototype.constructor.__layerProperties__ === undefined) {
+      console.error(`Layer located at: ${filePath} was missing layerProperties. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
+      return false;
+    }
+
+    return new LayerContainer(layer, filePath);
   }
 
   /**
@@ -110,36 +124,5 @@ export default class LayerLoader {
         resolve();
       });
     });
-  }
-}
-
-/**
- * Container for a Layer that contains the Layer itself, as welll as some meta data
- */
-export class LayerContainer {
-  constructor(layer, path) {
-    this.layer = layer;
-    this.path = path;
-
-    var unpackedLayer = layer.default;
-
-    if (unpackedLayer === undefined) {
-        console.error(`Module ${this.getFileName()} (found in ${layerContainer.path}) was not exported as default, therefore it will not be handled by the Resolver.`);
-        return false;
-    }
-
-    var layerConstructor = unpackedLayer.prototype.constructor;
-    this.layerKey = layerConstructor.__setLayerKey__(path);
-  }
-
-  /**
-   * gets filename, set when the layer was loaded originally by the LayerLoader.
-   *
-   * ex. "haywyre-is-awesome.js"
-   *
-   * @returns {String} the filename for the layer inside this container.
-   */
-  getFileName() {
-    return /[^\/]*\.js$/.exec(this.path)[0].replace(/.js$/, '');
   }
 }

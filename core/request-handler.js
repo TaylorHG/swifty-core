@@ -6,14 +6,13 @@ export default class RequestHandler {
 
   handleRequest(req, res) {
     // look through controllers to find one for this request.
-    var Controller = this.handler.getControllerForRequest(req);
+    var controllerLayerKey = this.handler.getControllerForRequest(req);
 
     // setup the controller
-    var controllerForRequest = new Controller();
-    controllerForRequest.setup();
+    var controllerForRequest = this.resolver.getLayerByKey(controllerLayerKey);
 
     // use handler to determine correct method to handle this request
-    var method = this.handler.findControllerMethod(req, Controller);
+    var method = this.handler.findControllerMethod(req, controllerForRequest.constructor);
 
     // TODO: inject necessary layers and create a path through them for the request
 

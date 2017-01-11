@@ -82,6 +82,14 @@ export default class Resolver extends SwiftyObject {
    */
   getLayerByKey(key) {
     var keys = key.split(':');
-    return this.get('layerStore').layerMap[keys[0]][keys[1]];
+    var layerContainer = this.get('layerStore').layerMap[keys[0]][keys[1]];
+    if (layerContainer === undefined) {
+      return undefined;
+    }
+    if (layerContainer.isSingleton) {
+      return layerContainer.singletonLayerInstance;
+    } else {
+      return layerContainer.layer;
+    }
   }
 }

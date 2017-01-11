@@ -1,6 +1,6 @@
 {
   "name": "@swift-developer/swifty-core",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
   "main": "./distribution/core.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "author": "Taylor Brooks",
   "license": "MIT",
   "devDependencies": {
-    "@swift-developer/swifty-rest": "0.0.7",
+    "@swift-developer/swifty-rest": "0.0.10",
     "@swift-developer/swifty-watcher": "0.1.0",
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",

@@ -14,15 +14,15 @@ export default class LayerStore {
    */
   registerLayer(layerContainer) {
     var layerKey = layerContainer.layerKey;
-    var layerConstructor = layerContainer.layer.default.prototype.constructor;
+    var layerConstructor = layerContainer.layer.prototype.constructor;
     if (this.layerMap[layerKey.type]) {
       // delete the old layer if it's there and replace it with the new
       delete this.layerMap[layerKey.type][layerKey.name];
-      this.layerMap[layerKey.type][layerKey.name] = layerConstructor;
+      this.layerMap[layerKey.type][layerKey.name] = layerContainer;
     } else {
       // add the new layer type,
       this.layerMap[layerKey.type] = {};
-      this.layerMap[layerKey.type][layerKey.name] = layerConstructor;
+      this.layerMap[layerKey.type][layerKey.name] = layerContainer;
     }
 
     return true;
