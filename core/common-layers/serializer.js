@@ -1,6 +1,10 @@
 import SingletonLayer from '../layer-support/singleton-layer'
 import incase from 'incase';
 
+/**
+ * Used to insure that fields show up when serialized with the same Object type that the
+ * Serializer defined, and Serializer's author expects.
+ */
 class ObjectSerializer {
   serializeString(string) {
     // insure the field shows up as a string in the response, otherwise cast it to one.
@@ -13,6 +17,10 @@ class ObjectSerializer {
   }
 }
 
+/**
+ * The SerializationEngine handles the actual serialization of Objects for the Serializer.
+ * It is responsible for taking in the specs set by the Serializer and using them to create valid JSON.
+ */
 class SerializationEngine {
   constructor(serializerSchema, nestedSerializer) {
     this.serializerSchema = serializerSchema;
@@ -20,6 +28,11 @@ class SerializationEngine {
     this.nestedSerializer = nestedSerializer;
   }
 
+  /**
+   * creates an Object that can be easily and cleanly serialized.
+   * This object is created using this SerializationEngine's serializerSchema,
+   * which is created and set by the Serializer itself, based on the class overriding it.
+   */
   createSerializableObject(rawObject) {
     var serializableObject = {};
 
@@ -38,6 +51,9 @@ class SerializationEngine {
     return serializableObject;
   }
 
+  /**
+   * serializes an Array or serializable objects that have been defined by another Serializer.
+   */
   serializeArray(rawArrayToSerialize) {
     var arrayToSerialize = [];
     var serializer = this.nestedSerializer;
@@ -48,13 +64,21 @@ class SerializationEngine {
     return JSON.stringify(arrayToSerialize);
   }
 
+  /**
+   * Serialize an Object using this SerializationEngine's serializerSchema,
+   * which is created and set by the Serializer itself, based on the class overriding it.
+   */
   serializeObject(objectToSerialize) {
     var serializableObject = this.createSerializableObject(objectToSerialize);
     return JSON.stringify(serializableObject);
   }
 }
 
-
+/**
+ * Serializer can be extended by the application author to define how results from the Controller should be serialized.
+ * It uses a seperate class known as a SerializationEngine to do the actual work, this class mostly exists to provide
+ * a clean interface to define how the results should be serialized.
+ */
 var Serializer = class Serializer extends SingletonLayer {
   constructor() {
     super();
@@ -85,6 +109,13 @@ var Serializer = class Serializer extends SingletonLayer {
     }
   }
 
+  /**
+   * define an attribute on whatever object is passed to the serializer.
+   * That attribute will be copied to the serialized result.
+   * @param {String} the name of the attribute to serialize.
+   * @param {String} the type of attribute to serialize.
+   * @param {Object} extra options to be used when serializing this record.
+   */
   attr(attribute, type, options) {
     this.serializerSchema[attribute] = {
       type: type,
@@ -92,6 +123,11 @@ var Serializer = class Serializer extends SingletonLayer {
     };
   }
 
+  /**
+   * transform this serializer into an array serializer. All previous definitions will be overriden in its current implementation.
+   * TODO: Make this better no longer override other `attr` definitions, and allow for sideloading.
+   * @param {String} LayerKey of the serializer to use to serialize objects within the array.
+   */
   array(serializer) {
     this.isArraySerializer = true;
     this.serializerSchema = {
@@ -100,6 +136,7 @@ var Serializer = class Serializer extends SingletonLayer {
   }
 }
 
+// create method for Resolver to cleanly import this Layer.
 Serializer.prototype.constructor.__setLayerKey__ = function(filePath) {
   var name = /[^\/]*\.js$/.exec(filePath)[0].replace(/.js$/, '');
 
@@ -116,6 +153,7 @@ Serializer.prototype.constructor.__setLayerKey__ = function(filePath) {
   };
 }
 
+// the request-handler uses this isFinal flag to decide whether this serializer will be the last Layer to run.
 Serializer.__layerProperties__.isFinal = true;
 
 export default Serializer;
