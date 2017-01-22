@@ -23,9 +23,6 @@ export default class LayerContainer {
       // we instantiate it
       var layerInstance = new layerConstructor();
 
-      // call it's setup method
-      layerInstance.setup();
-
       // and then store the instantiated layer for retrieval later by the resolver
       this.singletonLayerInstance = layerInstance;
     }

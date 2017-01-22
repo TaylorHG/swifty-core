@@ -14,9 +14,10 @@ class ObjectSerializer {
 }
 
 class SerializationEngine {
-  constructor(serializerSchema) {
+  constructor(serializerSchema, nestedSerializer) {
     this.serializerSchema = serializerSchema;
     this.valueSerializer = new ObjectSerializer();
+    this.nestedSerializer = nestedSerializer;
   }
 
   createSerializableObject(rawObject) {
@@ -39,8 +40,7 @@ class SerializationEngine {
 
   serializeArray(rawArrayToSerialize) {
     var arrayToSerialize = [];
-    var serializer = new this.serializerSchema.serializer();
-    serializer.setup();
+    var serializer = this.nestedSerializer;
     var engine = new SerializationEngine(serializer.serializerSchema);
     rawArrayToSerialize.forEach(function(object) {
       arrayToSerialize.push(engine.createSerializableObject(object));
@@ -65,6 +65,26 @@ var Serializer = class Serializer extends SingletonLayer {
     this.define();
   }
 
+  injectLayers() {
+    if (this.isArraySerializer) {
+      return [this.serializerSchema.serializer];
+    } else {
+      return [];
+    }
+  }
+
+  apply(session) {
+    session.res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+    if (this.isArraySerializer) {
+      var engine = new SerializationEngine(this.serializerSchema, this.get(this.serializerSchema.serializer));
+      return engine.serializeArray(session.controllerResult);
+    } else {
+      var engine = new SerializationEngine(this.serializerSchema);
+      return engine.serializeObject(session.controllerResult);
+    }
+  }
+
   attr(attribute, type, options) {
     this.serializerSchema[attribute] = {
       type: type,
@@ -77,15 +97,6 @@ var Serializer = class Serializer extends SingletonLayer {
     this.serializerSchema = {
       serializer: serializer
     };
-  }
-
-  apply(session) {
-    var engine = new SerializationEngine(this.serializerSchema);
-    if (this.isArraySerializer) {
-      return engine.serializeArray(session.controllerResult);
-    } else {
-      return engine.serializeObject(session.controllerResult);
-    }
   }
 }
 

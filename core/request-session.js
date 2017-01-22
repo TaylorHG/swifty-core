@@ -1,7 +1,6 @@
 export default class RequestSession {
   constructor(req, res) {
     this.req = req;
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     this.res = res;
     this.layerResults = {};
     this.handled = false;

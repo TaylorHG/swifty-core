@@ -8,7 +8,7 @@ import LayerStore from './layer-store';
 export default class Resolver extends SwiftyObject {
 
   /**
-   * Load all layers inside the app, create a new LayerStore with those layers loaded inside.
+   * Load all layers inside the app, create a new LayerStore with those layers loaded inside. This method is typically only called when the application is starting up.
    * @returns {Promise} promise that resolves when the Resolver itself has been fully initialized.
    */
   init() {
@@ -25,9 +25,15 @@ export default class Resolver extends SwiftyObject {
           console.error('No layers detected!');
         }
 
-        // register layers
-        layers.forEach((layer) => {
-          this.get('layerStore').registerLayer(layer);
+        // register layers with layerStore
+        layers.forEach((layerContainer) => {
+          this.get('layerStore').registerLayer(layerContainer);
+        });
+
+        // after layers have been registered with LayerStore,
+        // instantiate singletons and handle dependency injections
+        layers.forEach((layerContainer) => {
+          this.registerLayer(layerContainer);
         });
 
         resolve();
@@ -46,10 +52,31 @@ export default class Resolver extends SwiftyObject {
   addLayerByFileName(fileName) {
     return new Promise((resolve, reject) => {
       new LayerLoader().loadRawLayer(fileName).then((layerContainer) => {
-        this.get('layerStore').registerLayer(layerContainer);
+        this.registerLayer(layerContainer);
         resolve(layerContainer);
       }, reject);
     });
+  }
+
+  /**
+   * Register the layer with this resolver. This allows the Resolver to inspect the Layer and insure it is properly setup before loading it into its store.
+   * @param {LayerContainer} layerContainer that should be loaded into the store.
+   * @returns {boolean} Whether the layer was successfully loaded or not.
+   */
+  registerLayer(layerContainer) {
+    // inspect the layer for any necessary injections
+    if (layerContainer.isSingleton) {
+      layerContainer.singletonLayerInstance.setup();
+      var layersToInject = layerContainer.singletonLayerInstance.injectLayers();
+      // TODO make requiring a singleton Layer is possible. and handle circular dependencies when injecting.
+      //  For instance, if my serializer:swag requires my serializer:swags, insure it is loaded if it is a singleton, but also
+      //  insure that it does not require itself, or chain.
+      layersToInject.forEach((layerName) => {
+        layerContainer.singletonLayerInstance.set(layerName, this.getLayerByKey(layerName));
+      });
+    }
+
+    this.get('layerStore').registerLayer(layerContainer);
   }
 
   /**
