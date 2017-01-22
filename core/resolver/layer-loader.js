@@ -43,7 +43,10 @@ export default class LayerLoader {
           // only require js files.
           if (pathModule.extname(path) === ".js") {
             // we have a javascript file: load it and add it to this layer loader.
-            _this.layers.push(_this.loadLayer(path));
+            var layerContainer = _this.loadLayer(path);
+            if (layerContainer) {
+              _this.layers.push(layerContainer);
+            }
           }
 
           resolve();
@@ -72,6 +75,11 @@ export default class LayerLoader {
 
     if (layer.default.prototype.constructor.__layerProperties__ === undefined) {
       console.error(`Layer located at: ${filePath} was missing layerProperties. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
+      return false;
+    }
+
+    if (layer.default.prototype.constructor.__setLayerKey__ === undefined) {
+      console.error(`Layer located at: ${filePath} was missing function to define layerKey. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
       return false;
     }
 

@@ -1,5 +1,9 @@
 export default class Layer {
   setup() {
-    console.error('Layer method must be overriden!');
+    console.error('Setup method must be overriden!');
+  }
+
+  apply() {
+    console.error('Apply method must be overriden!');
   }
 }

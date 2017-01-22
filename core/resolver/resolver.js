@@ -65,13 +65,17 @@ export default class Resolver extends SwiftyObject {
     return new Promise((resolve, reject) => {
       var layerLoader = new LayerLoader()
       var layerContainer = layerLoader.loadLayer(fileNameToRemove);
-      layerLoader.unlinkLayer(fileNameToRemove).then(() => {
-        if (this.get('layerStore').deregisterLayer(layerContainer)) {
-          resolve(layerContainer);
-        } else {
-          reject(new Error(`${layerContainer.type}:${layerContainer.name} failed to be deregisted.`))
-        }
-      }, reject);
+      if (layerContainer) {
+        layerLoader.unlinkLayer(fileNameToRemove).then(() => {
+          if (this.get('layerStore').deregisterLayer(layerContainer)) {
+            resolve(layerContainer);
+          } else {
+            reject(new Error(`${layerContainer.type}:${layerContainer.name} failed to be deregisted.`))
+          }
+        }, reject);
+      } else {
+        reject();
+      }
     });
   }
 

@@ -1,3 +1,5 @@
+import RequestSession from './request-session';
+
 export default class RequestHandler {
   constructor(resolver, handler) {
     this.resolver = resolver;
@@ -5,6 +7,8 @@ export default class RequestHandler {
   }
 
   handleRequest(req, res) {
+    var requestSession = new RequestSession(req, res);
+
     // look through controllers to find one for this request.
     var controllerLayerKey = this.handler.getControllerForRequest(req);
 
@@ -12,13 +16,30 @@ export default class RequestHandler {
     var controllerForRequest = this.resolver.getLayerByKey(controllerLayerKey);
 
     // use handler to determine correct method to handle this request
-    var method = this.handler.findControllerMethod(req, controllerForRequest.constructor);
+    var controllerHandlerName = this.handler.findControllerMethod(req, controllerForRequest.constructor);
+    var handlerForRequest = controllerForRequest.__requestHandlers__[controllerHandlerName];
 
-    // TODO: inject necessary layers and create a path through them for the request
+    // delegate request to prepended layers
+    for (let layerName in handlerForRequest.preLayers) {
+      var preLayer = this.resolver.getLayerByKey(layerName);
+      console.log(`Ran layer: ${layerName}`);
+    }
 
-    // TODO: handle the request by passing it through all injected layers
+    // delegate request to controller method then store result in request session
+    requestSession.controllerResult = handlerForRequest.apply(req, res);
+    console.log(`Ran controller: ${layerName}`);
 
-    // for now i'm just gonna go with this:
-    controllerForRequest[method].apply(req, res);
+    // delegate request to appended layers
+    handlerForRequest.postLayers.forEach((layerName) => {
+      var postLayer = this.resolver.getLayerByKey(layerName);
+      console.log(`Ran layer: ${layerName}`);
+      // if the layer is a finalLayer, we set the result for the request as it's result.
+      if (postLayer.constructor.__layerProperties__.isFinal) {
+        requestSession.setResult(postLayer.apply(requestSession));
+      }
+    });
+
+    // end the request session, triggering the response to be sent to the client.
+    requestSession.end();
   }
 }
