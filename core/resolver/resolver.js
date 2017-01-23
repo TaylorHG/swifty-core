@@ -4,8 +4,14 @@ import SwiftyObject from '@swift-developer/swifty-objects';
 // import resolver related modules
 import LayerLoader from './layer-loader';
 import LayerStore from './layer-store';
+import { LAYER_STATES } from './layer-states';
 
 export default class Resolver extends SwiftyObject {
+  constructor() {
+    super();
+    this.set('layerStore', new LayerStore());
+  }
+
 
   /**
    * Load all layers inside the app, create a new LayerStore with those layers loaded inside. This method is typically only called when the application is starting up.
@@ -19,8 +25,6 @@ export default class Resolver extends SwiftyObject {
       // register all layers within the current application and load them
       // into this Resolver's layerStore for instantiation later.
       layerLoader.loadLayers(`${process.cwd()}/dist`).then((layers) => {
-        this.set('layerStore', new LayerStore);
-
         if (layers.length === 0) {
           console.error('No layers detected!');
         }
@@ -36,11 +40,41 @@ export default class Resolver extends SwiftyObject {
           this.registerLayer(layerContainer);
         });
 
+        // map dependencies of the LayerStore
+        this.get('layerStore').mapDependencies();
+
         resolve();
       }, function() {
         console.error('Failed to load layers... :(');
       });
     })
+  }
+
+  /**
+   * Register the layer with this resolver.
+   * This allows the Resolver to inspect the Layer and insure it is properly setup before loading it into its store.
+   * @param {LayerContainer} layerContainer that should be loaded into the store.
+   * @returns {boolean} Whether the layer was successfully loaded or not.
+   */
+  registerLayer(layerContainer) {
+    // var layersToInject = layerContainer.singletonLayerInstance.injectLayers();
+    // layersToInject.forEach((layerName) => {
+    //   layerContainer.singletonLayerInstance.set(layerName, this.getLayerByKey(layerName));
+    // });
+
+    layerContainer.setup();
+    this.get('layerStore').registerLayer(layerContainer);
+    return true;
+  }
+
+  /**
+  * Deregister the layer with this resolver.
+  * @param {LayerContainer} layerContainer that should be removed from the store.
+  * @returns {boolean} Whether the layer was successfully removed or not.
+   */
+  deregisterLayer(layerContainer) {
+    this.get('layerStore').deregisterLayer(layerContainer);
+    return true;
   }
 
   /**
@@ -59,27 +93,6 @@ export default class Resolver extends SwiftyObject {
   }
 
   /**
-   * Register the layer with this resolver. This allows the Resolver to inspect the Layer and insure it is properly setup before loading it into its store.
-   * @param {LayerContainer} layerContainer that should be loaded into the store.
-   * @returns {boolean} Whether the layer was successfully loaded or not.
-   */
-  registerLayer(layerContainer) {
-    // inspect the layer for any necessary injections
-    if (layerContainer.isSingleton) {
-      layerContainer.singletonLayerInstance.setup();
-      var layersToInject = layerContainer.singletonLayerInstance.injectLayers();
-      // TODO make requiring a singleton Layer is possible. and handle circular dependencies when injecting.
-      //  For instance, if my serializer:swag requires my serializer:swags, insure it is loaded if it is a singleton, but also
-      //  insure that it does not require itself, or chain.
-      layersToInject.forEach((layerName) => {
-        layerContainer.singletonLayerInstance.set(layerName, this.getLayerByKey(layerName));
-      });
-    }
-
-    this.get('layerStore').registerLayer(layerContainer);
-  }
-
-  /**
    * Use the FileLoader to remove a layer by filename. File must have been written in ES7 (swifty).
    * If the Layer already exists inside the store, it will delete that Layer from the store.
    * @param {String} fileName of the file to remove
@@ -94,7 +107,7 @@ export default class Resolver extends SwiftyObject {
       var layerContainer = layerLoader.loadLayer(fileNameToRemove);
       if (layerContainer) {
         layerLoader.unlinkLayer(fileNameToRemove).then(() => {
-          if (this.get('layerStore').deregisterLayer(layerContainer)) {
+          if (this.deregisterLayer(layerContainer)) {
             resolve(layerContainer);
           } else {
             reject(new Error(`${layerContainer.type}:${layerContainer.name} failed to be deregisted.`))
@@ -112,8 +125,7 @@ export default class Resolver extends SwiftyObject {
    * @returns {Class} class corresponding to the given key.
    */
   getLayerByKey(key) {
-    var keys = key.split(':');
-    var layerContainer = this.get('layerStore').layerMap[keys[0]][keys[1]];
+    var layerContainer = this.getLayerContainerByKey(key);
     if (layerContainer === undefined) {
       return undefined;
     }
@@ -123,4 +135,13 @@ export default class Resolver extends SwiftyObject {
       return layerContainer.layer;
     }
   }
+
+  /**
+   * get a layer container by key
+   * @param {String} key used to the pull the LayerContainer out of the store
+   * @returns {LayerContainer} LayerContainer to pull from the store
+   */
+   getLayerContainerByKey(key) {
+     return this.get('layerStore').getByKey(key);
+   }
 }

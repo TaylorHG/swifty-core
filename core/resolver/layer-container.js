@@ -1,3 +1,5 @@
+import { LAYER_STATES } from './layer-states';
+
 /**
  * Container for a Layer that contains the Layer itself, as welll as some meta data
  */
@@ -28,6 +30,33 @@ export default class LayerContainer {
     }
 
     this.layerKey = layerConstructor.__setLayerKey__(path);
+
+    // set state of layer
+    this.transitionTo(LAYER_STATES.RAW);
+  }
+
+
+  /**
+   * Setup the Layer using its own setup method.
+   * Track that the setup method has been called using the `state` field of this LayerContainer.
+   */
+  setup() {
+    if (this.isSingleton) {
+      this.singletonLayerInstance.setup();
+    }
+
+    this.transitionTo(LAYER_STATES.DEFINED);
+  }
+
+
+  /**
+   * set the State of this Layer to a given State
+   * @param {LAYER_STATE} state to transition to
+   * @returns {boolean} true if transition was successful
+   */
+  transitionTo(state) {
+    this.state = state;
+    return true;
   }
 
   /**
@@ -39,5 +68,14 @@ export default class LayerContainer {
    */
   getFileName() {
     return /[^\/]*\.js$/.exec(this.path)[0].replace(/.js$/, '');
+  }
+
+  get dependencies() {
+    if (this.state === LAYER_STATES.DEFINED) {
+      if (this.isSingleton) {
+        return this.singletonLayerInstance.injectLayers();
+      }
+    }
+    return [];
   }
 }
