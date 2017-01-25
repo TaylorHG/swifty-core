@@ -19,8 +19,10 @@ Layers are managed via a Resolver. One of the first things an Application does w
 
 TODO List:
 - Managing of injected Layers and their dependencies
+- Move Layer States to Layer Instances
+- Allow injecting of updated dependencies into Layers already in-use at runtime
 - Error handling
+- Protect against circular dependencies
 - Routing
 - Test framework
 - CLI to generate project
-- Interface for creating Layers

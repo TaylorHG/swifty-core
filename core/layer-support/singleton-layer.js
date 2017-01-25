@@ -1,18 +1,7 @@
 import SwiftyObject from '@swift-developer/swifty-objects';
+import Layer from './layer';
 
-var singletonLayer = class SingletonLayer extends SwiftyObject {
-  setup() {
-    console.error('Setup method must be overriden!');
-  }
-
-  apply() {
-    console.error('Apply method must be overriden!');
-  }
-
-  injectLayers() {
-    return [];
-  }
-}
+var singletonLayer = class SingletonLayer extends Layer { }
 
 
 var layerProperties = singletonLayer.__layerProperties__ = {};

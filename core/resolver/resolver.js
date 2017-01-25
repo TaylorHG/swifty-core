@@ -31,17 +31,27 @@ export default class Resolver extends SwiftyObject {
 
         // register layers with layerStore
         layers.forEach((layerContainer) => {
-          this.get('layerStore').registerLayer(layerContainer);
+          this.get('layerStore').loadRawLayer(layerContainer);
         });
 
-        // after layers have been registered with LayerStore,
-        // instantiate singletons and handle dependency injections
+        // define the singleton layers
         layers.forEach((layerContainer) => {
-          this.registerLayer(layerContainer);
-        });
+          if (layerContainer.isSingleton) {
+            layerContainer.singletonLayerInstance.define();
+            layerContainer.transitionTo(LAYER_STATES.DEFINED);
+          }
+        })
 
         // map dependencies of the LayerStore
         this.get('layerStore').mapDependencies();
+
+        // inject dependencies for each layer
+        this.get('layerStore').injectIntoSingletonLayers();
+
+        // mark all layers as ready
+        layers.forEach((layerContainer) => {
+          layerContainer.transitionTo(LAYER_STATES.READY);
+        });
 
         resolve();
       }, function() {
@@ -52,17 +62,11 @@ export default class Resolver extends SwiftyObject {
 
   /**
    * Register the layer with this resolver.
-   * This allows the Resolver to inspect the Layer and insure it is properly setup before loading it into its store.
+   * This allows the Resolver to inspect the Layer and insure it is properly initialized before loading it into its store.
    * @param {LayerContainer} layerContainer that should be loaded into the store.
    * @returns {boolean} Whether the layer was successfully loaded or not.
    */
   registerLayer(layerContainer) {
-    // var layersToInject = layerContainer.singletonLayerInstance.injectLayers();
-    // layersToInject.forEach((layerName) => {
-    //   layerContainer.singletonLayerInstance.set(layerName, this.getLayerByKey(layerName));
-    // });
-
-    layerContainer.setup();
     this.get('layerStore').registerLayer(layerContainer);
     return true;
   }

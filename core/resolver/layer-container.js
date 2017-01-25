@@ -31,21 +31,10 @@ export default class LayerContainer {
 
     this.layerKey = layerConstructor.__setLayerKey__(path);
 
-    // set state of layer
+    this.compactLayerKey = `${this.layerKey.type}:${this.layerKey.name}`;
+
+    // set state of layer to RAW, this means it still requires setting up by the Resolver
     this.transitionTo(LAYER_STATES.RAW);
-  }
-
-
-  /**
-   * Setup the Layer using its own setup method.
-   * Track that the setup method has been called using the `state` field of this LayerContainer.
-   */
-  setup() {
-    if (this.isSingleton) {
-      this.singletonLayerInstance.setup();
-    }
-
-    this.transitionTo(LAYER_STATES.DEFINED);
   }
 
 
@@ -55,8 +44,13 @@ export default class LayerContainer {
    * @returns {boolean} true if transition was successful
    */
   transitionTo(state) {
-    this.state = state;
-    return true;
+    if (state && LAYER_STATES[state.identifier]) {
+      this.state = state;
+      return true;
+    } else {
+      console.error(`Layer transitioned to Invalid state!\nState was: ${state}`);
+      return false;
+    }
   }
 
   /**
@@ -70,12 +64,19 @@ export default class LayerContainer {
     return /[^\/]*\.js$/.exec(this.path)[0].replace(/.js$/, '');
   }
 
+  /**
+   * gets the layerKeys that make up the dependencies for the layer inside this LayerContainer.
+   * @return {Array} array of layerKeys that make up the dependencies for the layer inside this LayerContainer.
+   */
   get dependencies() {
-    if (this.state === LAYER_STATES.DEFINED) {
-      if (this.isSingleton) {
-        return this.singletonLayerInstance.injectLayers();
-      }
+    if (this.isSingleton) {
+      // get the dependencies for the singleton layer. easy.
+      return this.singletonLayerInstance.injectLayers();
+    } else {
+      // non-singleton layer, so we create an instance of it and check if it requires dependencies
+      var probeInstance = new this.layer();
+      probeInstance.define();
+      return probeInstance.injectLayers();
     }
-    return [];
   }
 }

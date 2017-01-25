@@ -85,10 +85,6 @@ var Serializer = class Serializer extends SingletonLayer {
     this.serializerSchema = {};
   }
 
-  setup() {
-    this.define();
-  }
-
   injectLayers() {
     if (this.isArraySerializer) {
       return [this.serializerSchema.serializer];
