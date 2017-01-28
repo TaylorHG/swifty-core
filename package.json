@@ -17,20 +17,21 @@
   "author": "Taylor Brooks",
   "license": "MIT",
   "devDependencies": {
-    "@swift-developer/swifty-rest": "0.0.10",
+    "@swift-developer/swifty-rest": "0.0.17",
+    "@swift-developer/swifty-serializer": "0.1.0",
     "@swift-developer/swifty-watcher": "0.1.0",
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",
     "eslint": "^3.13.0"
   },
   "dependencies": {
+    "@swift-developer/swifty-layer-utils": "0.1.0",
     "@swift-developer/swifty-objects": "0.0.1",
     "babel-core": "^6.21.0",
     "babel-preset-swifty": "0.0.7",
     "colors": "^1.1.2",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
-    "express": "^4.14.0",
-    "incase": "^0.1.0"
+    "express": "^4.14.0"
   }
 }

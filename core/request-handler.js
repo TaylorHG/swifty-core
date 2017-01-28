@@ -9,32 +9,37 @@ export default class RequestHandler {
   handleRequest(req, res) {
     var requestSession = new RequestSession(req, res);
 
-    // look through controllers to find one for this request.
-    var controllerLayerKey = this.handler.getControllerForRequest(req);
+    // look through resources to find one for this request.
+    var resourceLayerKey = this.handler.getResourceForRequest(req);
 
-    // setup the controller
-    var controllerForRequest = this.resolver.getLayerByKey(controllerLayerKey);
+    // setup the resource
+    var resourceForRequest = this.resolver.getLayerByKey(resourceLayerKey);
 
     // use handler to determine correct method to handle this request
-    var controllerHandlerName = this.handler.findControllerMethod(req, controllerForRequest.constructor);
-    var handlerForRequest = controllerForRequest.__requestHandlers__[controllerHandlerName];
+    var resourceHandlerName = this.handler.findResourceMethod(req, resourceForRequest.constructor);
+    var handlerForRequest = resourceForRequest.__requestHandlers__[resourceHandlerName];
 
     // delegate request to prepended layers
-    for (let layerName in handlerForRequest.preLayers) {
+    for (let ndx in handlerForRequest.preLayers) {
+      var layerName = handlerForRequest.postLayers[ndx];
       var preLayer = this.resolver.getLayerByKey(layerName);
+      preLayer.apply(requestSession);
     }
 
-    // delegate request to controller method then store result in request session
-    requestSession.controllerResult = handlerForRequest.apply(req, res);
+    // delegate request to resource method then store result in request session
+    requestSession.resourceResult = handlerForRequest.apply(req, res);
 
     // delegate request to appended layers
-    handlerForRequest.postLayers.forEach((layerName) => {
+    for (let ndx in handlerForRequest.postLayers) {
+      var layerName = handlerForRequest.postLayers[ndx];
       var postLayer = this.resolver.getLayerByKey(layerName);
       // if the layer is a finalLayer, we set the result for the request as it's result.
       if (postLayer.constructor.__layerProperties__.isFinal) {
         requestSession.setResult(postLayer.apply(requestSession));
+      } else {
+        postLayer.apply(requestSession);
       }
-    });
+    }
 
     // end the request session, triggering the response to be sent to the client.
     requestSession.end();

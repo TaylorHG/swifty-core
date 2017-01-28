@@ -4,7 +4,7 @@ export default class RequestSession {
     this.res = res;
     this.layerResults = {};
     this.handled = false;
-    this.controllerResult = undefined;
+    this.resourceResult = undefined;
     this.result = undefined;
   }
 
