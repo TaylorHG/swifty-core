@@ -169,6 +169,13 @@ export default class LayerStore {
 
     // delete the old layer if it's there and replace it with the new
     delete this.layerMap[layerKey.type][layerKey.name];
+
+    // (re)map dependencies
+    this.mapDependencies();
+
+    // (re)inject dependencies
+    this.injectIntoSingletonLayers();
+
     return true;
   }
 
