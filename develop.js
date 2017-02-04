@@ -1,6 +1,6 @@
 'use strict';
 
-var Core = require('./distribution/core').default;
+var Core = require('./core/core').default;
 var config = require('./dist/app-config');
 var SwiftyWatcher = require('@swift-developer/swifty-watcher').default
 

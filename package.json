@@ -1,14 +1,13 @@
 {
   "name": "@swift-developer/swifty-core",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
   "main": "./distribution/core.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel core --out-dir distribution -q",
-    "prepublish": "npm run build",
-    "develop": "babel-watch app/develop.js",
-    "debug": "npm run build && babel app --out-dir dist -q && cp app/app-config.json dist && node --inspect debug.js"
+    "test": "babel test --out-dir test-dist -q  && node --inspect test-dist/test-runner.js",
+    "prepublish": "babel core --out-dir distribution -q",
+    "develop": "babel-node develop.js",
+    "debug": "rm -rf dist && rm -rf distribution && babel core --out-dir distribution -q && babel app --out-dir dist -q && cp app/app-config.json dist && node --inspect debug.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +31,10 @@
     "colors": "^1.1.2",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
-    "express": "^4.14.0"
+    "expect": "^1.20.2",
+    "expect.js": "^0.3.1",
+    "express": "^4.14.0",
+    "lodash": "^4.17.4",
+    "lodash.wrap": "^4.1.1"
   }
 }

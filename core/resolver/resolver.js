@@ -136,7 +136,7 @@ export default class Resolver extends SwiftyObject {
     if (layerContainer.isSingleton) {
       return layerContainer.singletonLayerInstance;
     } else {
-      return layerContainer.layer;
+      return new layerContainer.layer();
     }
   }
 
