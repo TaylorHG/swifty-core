@@ -4,10 +4,10 @@
   "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
   "main": "./distribution/core.js",
   "scripts": {
-    "test": "babel test --out-dir test-dist -q  && node --inspect test-dist/test-runner.js",
+    "test": "rm -rf test-dist && babel test --out-dir test-dist -q && node test.js",
     "prepublish": "babel core --out-dir distribution -q",
     "develop": "babel-node develop.js",
-    "debug": "rm -rf dist && rm -rf distribution && babel core --out-dir distribution -q && babel app --out-dir dist -q && cp app/app-config.json dist && node --inspect debug.js"
+    "debug": "rm -rf distribution && babel core --out-dir distribution -q && node --inspect debug.js"
   },
   "repository": {
     "type": "git",
@@ -16,25 +16,22 @@
   "author": "Taylor Brooks",
   "license": "MIT",
   "devDependencies": {
+    "@swift-developer/swiftest": "0.0.3",
     "@swift-developer/swifty-rest": "0.0.17",
     "@swift-developer/swifty-serializer": "0.1.0",
-    "@swift-developer/swifty-watcher": "0.1.0",
+    "@swift-developer/swifty-watcher": "0.1.1",
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.1",
+    "babel-preset-swifty": "0.0.7",
     "eslint": "^3.13.0"
   },
   "dependencies": {
     "@swift-developer/swifty-layer-utils": "0.1.0",
     "@swift-developer/swifty-objects": "0.0.1",
     "babel-core": "^6.21.0",
-    "babel-preset-swifty": "0.0.7",
     "colors": "^1.1.2",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
-    "expect": "^1.20.2",
-    "expect.js": "^0.3.1",
-    "express": "^4.14.0",
-    "lodash": "^4.17.4",
-    "lodash.wrap": "^4.1.1"
+    "mkpath": "^1.0.0"
   }
 }

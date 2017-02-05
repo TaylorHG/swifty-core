@@ -2,16 +2,30 @@ import connect from 'connect';
 import http from 'http';
 import SwiftyObject from '@swift-developer/swifty-objects';
 
+// import resolver helpers
 import Resolver from './resolver/resolver';
 import RequestHandler from './request-handler';
+
+// import logging helpers
+import { initializeLogger } from './utils/logger';
+import { LOGGER } from './utils/logger';
+
+// export main logging
+export { LOGGER };
 
 // export support for resources
 import Resource from './common-layers/resource';
 export { Resource };
 
 export default class SwiftyCore extends SwiftyObject {
-  constructor() {
+  constructor(config) {
     super();
+    // store configuration
+    this.config = config;
+
+    // initialize logger
+    initializeLogger();
+
     // build and set Resolver
     this.set('resolver', new Resolver());
   }
@@ -21,17 +35,19 @@ export default class SwiftyCore extends SwiftyObject {
    * @param {Object} configuration necessary to start server
    * @returns {Promise} resolves once the app has finished setting up and is ready for requests.
    */
-  run(config) {
-    console.log('Building Application...');
+  run() {
+    LOGGER.info('Building Application...');
 
+    // build logger
+
+    // build layers and start application listening on config port
     return new Promise((resolve, reject) => {
       // load handler from config and initialize it.
-      var HttpManager = require(config.httpManager).default;
-      // var HttpManager = SwiftyRestHandler;
+      var HttpManager = require(this.config.httpManager).default;
       this.set('httpManager', new HttpManager(this.get('resolver')));
 
       // initialize the resolver
-      this.get('resolver').init().then(() => {
+      this.get('resolver').init(this.config.appName).then(() => {
         // create connect.js application
         var app = connect();
 
@@ -42,7 +58,9 @@ export default class SwiftyCore extends SwiftyObject {
         // create request handler
         var requestHandler = new RequestHandler(this.get('resolver'), this.get('httpManager'));
 
-        console.log('Application Built!\n\n\n');
+        LOGGER.info('Application Built!');
+        LOGGER.info('');
+        LOGGER.info('');
 
         // configure connect.js to respond to all requests using the request handler
         app.use(function(req, res) {
@@ -50,18 +68,18 @@ export default class SwiftyCore extends SwiftyObject {
         });
 
         //create node.js http server and listen on the configured port
-        http.createServer(app).listen(config.port);
+        http.createServer(app).listen(this.config.port);
 
-        console.log(`Listening for requests on port ${config.port}...`);
+        LOGGER.info(`Listening for requests on port ${this.config.port}...`);
 
         // result now that the application has finished setting up.
         resolve();
       }, function(err) {
-        console.error(err);
+        LOGGER.error(err);
         reject();
       });
     }, function(err) {
-      console.error(err);
+      LOGGER.error(err);
     });
   }
 }

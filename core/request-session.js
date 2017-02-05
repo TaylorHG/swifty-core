@@ -1,3 +1,5 @@
+import { LOGGER } from './utils/logger';
+
 export default class RequestSession {
   constructor(req, res) {
     this.req = req;
@@ -14,7 +16,7 @@ export default class RequestSession {
 
   setResult(result) {
     if (this.result !== undefined) {
-      console.error('Result can only be set once!');
+      LOGGER.error('Result can only be set once!');
     } else {
       this.result = result;
     }

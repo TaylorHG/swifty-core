@@ -1,5 +1,7 @@
 import { LAYER_STATES } from './layer-states';
 
+import { LOGGER } from '../utils/logger';
+
 /**
  * Container for a Layer that contains the Layer itself, as welll as some meta data
  */
@@ -48,7 +50,7 @@ export default class LayerContainer {
       this.state = state;
       return true;
     } else {
-      console.error(`Layer transitioned to Invalid state!\nState was: ${state}`);
+      LOGGER.error(`Layer transitioned to Invalid state!\nState was: ${state}`);
       return false;
     }
   }

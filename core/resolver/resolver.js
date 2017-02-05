@@ -6,6 +6,8 @@ import LayerLoader from './layer-loader';
 import LayerStore from './layer-store';
 import { LAYER_STATES } from './layer-states';
 
+import { LOGGER } from '../utils/logger';
+
 export default class Resolver extends SwiftyObject {
   constructor() {
     super();
@@ -17,16 +19,17 @@ export default class Resolver extends SwiftyObject {
    * Load all layers inside the app, create a new LayerStore with those layers loaded inside. This method is typically only called when the application is starting up.
    * @returns {Promise} promise that resolves when the Resolver itself has been fully initialized.
    */
-  init() {
+  init(appName) {
     // return promise to resolve all modules within the current application.
     return new Promise((resolve) => {
-      var layerLoader = new LayerLoader();
+      var layerLoader = new LayerLoader(`${process.cwd()}/${appName}`);
 
       // register all layers within the current application and load them
       // into this Resolver's layerStore for instantiation later.
-      layerLoader.loadLayers(`${process.cwd()}/dist`).then((layers) => {
+      layerLoader.loadLayers().then((layers) => {
+
         if (layers.length === 0) {
-          console.error('No layers detected!');
+          LOGGER.error('No layers detected!');
         }
 
         // register layers with layerStore
@@ -54,8 +57,9 @@ export default class Resolver extends SwiftyObject {
         });
 
         resolve();
-      }, function() {
-        console.error('Failed to load layers... :(');
+      }, function(err) {
+        LOGGER.error('Failed to load layers... :( Unfortunately, this is likely a bug with Swifty.js itself. Reason was:');
+        LOGGER.error(err);
       });
     })
   }

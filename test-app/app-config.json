@@ -1,0 +1,5 @@
+{
+  "appName": "test-app",
+  "httpManager": "@swift-developer/swifty-rest",
+  "port": 1989
+}

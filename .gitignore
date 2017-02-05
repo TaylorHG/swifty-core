@@ -2,6 +2,8 @@ node_modules/
 npm-debug.log
 distribution/
 dist/
-test-dist/
 .DS_Store
 app/
+
+test-app/
+application.log

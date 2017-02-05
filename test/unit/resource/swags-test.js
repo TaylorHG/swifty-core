@@ -1,15 +1,14 @@
-import test from '../../decorators/test';
-import UnitTest from '../../test-support/test-types/unit-test-support';
+import { UnitTest, test } from '@swift-developer/swiftest';
 
 export const testSubject = "resource:swags";
 export default class SwagsResourceTest extends UnitTest {
-  setup() {
-    console.log('setting up for test');
-  }
-
-  teardown() {
-    console.log('tearing down after test');
-  }
+  // setup() {
+  //   console.log('setting up for test');
+  // }
+  //
+  // teardown() {
+  //   console.log('tearing down after test');
+  // }
 
   @test('resource exists')
   itExists(expect) {

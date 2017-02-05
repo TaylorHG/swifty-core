@@ -8,3 +8,6 @@ dist/
 app/
 .DS_Store
 npm-debug.log
+
+test-app/
+application.log
