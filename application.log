@@ -84,3 +84,13 @@
 {"meta":"","level":"info","message":"","timestamp":"2017-02-05T09:42:17.054Z"}
 {"meta":"","level":"info","message":"","timestamp":"2017-02-05T09:42:17.055Z"}
 {"level":"info","message":"Listening for requests on port 1989...","timestamp":"2017-02-05T09:42:17.061Z"}
+{"level":"info","message":"Building Application...","timestamp":"2017-02-06T06:00:35.351Z"}
+{"level":"info","message":"Application Built!","timestamp":"2017-02-06T06:00:35.788Z"}
+{"meta":"","level":"info","message":"","timestamp":"2017-02-06T06:00:35.788Z"}
+{"meta":"","level":"info","message":"","timestamp":"2017-02-06T06:00:35.788Z"}
+{"level":"info","message":"Listening for requests on port 1989...","timestamp":"2017-02-06T06:00:35.794Z"}
+{"level":"info","message":"Building Application...","timestamp":"2017-02-06T06:02:54.393Z"}
+{"level":"info","message":"Application Built!","timestamp":"2017-02-06T06:02:55.498Z"}
+{"meta":"","level":"info","message":"","timestamp":"2017-02-06T06:02:55.498Z"}
+{"meta":"","level":"info","message":"","timestamp":"2017-02-06T06:02:55.499Z"}
+{"level":"info","message":"Listening for requests on port 1989...","timestamp":"2017-02-06T06:02:55.513Z"}

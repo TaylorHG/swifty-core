@@ -6,7 +6,7 @@ import LayerLoader from './layer-loader';
 import LayerStore from './layer-store';
 import { LAYER_STATES } from './layer-states';
 
-import { LOGGER } from '../utils/logger';
+import { LOGGER } from '@swift-developer/swifty-logger';
 
 export default class Resolver extends SwiftyObject {
   constructor() {

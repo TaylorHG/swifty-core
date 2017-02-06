@@ -5,7 +5,7 @@ import babelPresetSwifty from 'babel-preset-swifty';
 import LayerContainer from './layer-container';
 import mkpath from 'mkpath';
 
-import { LOGGER } from '../utils/logger';
+import { LOGGER } from '@swift-developer/swifty-logger';
 
 export default class LayerLoader {
 

@@ -1,4 +1,4 @@
-import { LOGGER } from './utils/logger';
+import { LOGGER } from '@swift-developer/swifty-logger';
 
 export default class RequestSession {
   constructor(req, res) {

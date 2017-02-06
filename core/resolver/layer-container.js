@@ -1,6 +1,6 @@
 import { LAYER_STATES } from './layer-states';
 
-import { LOGGER } from '../utils/logger';
+import { LOGGER } from '@swift-developer/swifty-logger';
 
 /**
  * Container for a Layer that contains the Layer itself, as welll as some meta data

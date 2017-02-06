@@ -17,8 +17,12 @@ Using Layers, you can also get a great testing experience as a developer. Layers
 
 Layers are managed via a Resolver. One of the first things an Application does when it first spawns is create a Resolver. The Resolver then manages files inside the `app` directory, compiling them and turning them into Layers. Once they are Layers and registered with the Resolver, they are then set up by the Resolver. This *setup stage* involves a few things, and can vary from Layer to Layer, but dependency injection is a huge one that almost all Layers utilize. During this *setup stage*, Singleton Layers are also instantiated and loaded into the Application, for distribution throughout the app.
 
-TODO List:
+TODO List for 0.1.0 Beta version:
 - Move Layer States to Layer Instances
 - Protect against circular dependencies
 - Routing
 - CLI to generate project
+
+
+Future:
+- Allow for C

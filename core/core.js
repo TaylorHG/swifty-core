@@ -7,8 +7,8 @@ import Resolver from './resolver/resolver';
 import RequestHandler from './request-handler';
 
 // import logging helpers
-import { initializeLogger } from './utils/logger';
-import { LOGGER } from './utils/logger';
+import { initializeLogger } from '@swift-developer/swifty-logger';
+import { LOGGER } from '@swift-developer/swifty-logger';
 
 // export main logging
 export { LOGGER };
