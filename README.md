@@ -25,4 +25,4 @@ TODO List for 0.1.0 Beta version:
 
 
 Future:
-- Allow for C
+- Allow for configuration of logger.

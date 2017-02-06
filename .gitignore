@@ -3,7 +3,5 @@ npm-debug.log
 distribution/
 dist/
 .DS_Store
-app/
 
-test-app/
 application.log

@@ -20,9 +20,8 @@
     "@swift-developer/swifty-rest": "0.0.17",
     "@swift-developer/swifty-serializer": "0.1.0",
     "@swift-developer/swifty-watcher": "0.1.1",
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.21.0",
     "babel-eslint": "^7.1.1",
-    "babel-preset-swifty": "0.0.7",
     "eslint": "^3.13.0"
   },
   "dependencies": {
@@ -30,6 +29,7 @@
     "@swift-developer/swifty-logger": "0.1.0",
     "@swift-developer/swifty-objects": "0.0.1",
     "babel-core": "^6.21.0",
+    "babel-preset-swifty": "^0.1.0",
     "colors": "^1.1.2",
     "compression": "^1.6.2",
     "connect": "^3.5.0",
