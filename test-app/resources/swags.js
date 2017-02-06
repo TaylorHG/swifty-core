@@ -4,8 +4,8 @@ import Resource from '../../../distribution/common-layers/resource';
 
 class Swag {
   constructor(name, createdAt) {
-    this.name = name,
-    this.createdAt = createdAt
+    this.name = name;
+    this.createdAt = createdAt;
   }
 }
 
