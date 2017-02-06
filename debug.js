@@ -8,10 +8,8 @@ var run = function run() {
   // build app
   var application = new Core(config);
 
-  const appName = 'test-app';
-
   // watch files for changes and load changes into resolver
-  new SwiftyWatcher(application.get('resolver')).watch(appName);
+  new SwiftyWatcher(application.get('resolver')).watch(config.appName);
 
   // run app
   application.run();
