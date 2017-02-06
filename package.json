@@ -1,6 +1,6 @@
 {
   "name": "@swift-developer/swifty-core",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Core of Swifty.js, a modular, scalable, and light-weight framework for Node.js APIs!",
   "main": "./distribution/core.js",
   "scripts": {
