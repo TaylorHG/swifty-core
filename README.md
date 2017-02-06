@@ -20,6 +20,7 @@ Layers are managed via a Resolver. One of the first things an Application does w
 TODO List for 0.1.0 Beta version:
 - Move Layer States to Layer Instances
 - Protect against circular dependencies
+- Remove all these `process.cwd()` calls. Instead pass it around where needed. This allows the CLI to run projects in any directories and makes everything less brittle.
 - Routing
 - CLI to generate project
 
