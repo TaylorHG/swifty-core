@@ -7,39 +7,47 @@ export default class RequestHandler {
   }
 
   handleRequest(req, res) {
+    var router = this.resolver.getLayerByKey('core:router');
+
     var requestSession = new RequestSession(req, res);
 
-    // look through resources to find one for this request.
-    var resourceLayerKey = this.handler.getResourceForRequest(req);
+    // get resource path for request
+    var resourcePath = router.getResourcePathForRequest(req);
 
-    // setup the resource
-    var resourceForRequest = this.resolver.getLayerByKey(resourceLayerKey);
+    // run the request through each resource path
+    resourcePath.forEach((routingNode) => {
 
-    // use handler to determine correct method to handle this request
-    var resourceHandlerName = this.handler.findResourceMethod(req, resourceForRequest.constructor);
-    var handlerForRequest = resourceForRequest.__requestHandlers__[resourceHandlerName];
+      // get an instance of the resource to use for the request
+      var resourceForRequest = this.resolver.getLayerByKey(`resource:${routingNode.blueprint.options.resource}`);
 
-    // delegate request to prepended layers
-    for (let ndx in handlerForRequest.preLayers) {
-      var layerName = handlerForRequest.postLayers[ndx];
-      var preLayer = this.resolver.getLayerByKey(layerName);
-      preLayer.apply(requestSession);
-    }
+      // use handler to determine the function on the resource to use to fulfill the request
+      var resourceHandlerName = this.handler.findFunctionForRequest(req, resourceForRequest, resourcePath);
 
-    // delegate request to resource method then store result in request session
-    requestSession.resourceResult = handlerForRequest.apply(req, res);
+      // get that function
+      var handlerForRequest = resourceForRequest.__requestHandlers__[resourceHandlerName];
 
-    // delegate request to appended layers
-    for (let ndx in handlerForRequest.postLayers) {
-      var layerName = handlerForRequest.postLayers[ndx];
-      var postLayer = this.resolver.getLayerByKey(layerName);
-      // if the layer is a finalLayer, we set the result for the request as it's result.
-      if (postLayer.constructor.__layerProperties__.isFinal) {
-        requestSession.setResult(postLayer.apply(requestSession));
-      } else {
-        postLayer.apply(requestSession);
+      // delegate request to prepended layers
+      for (let ndx in handlerForRequest.preLayers) {
+        var layerName = handlerForRequest.postLayers[ndx];
+        var preLayer = this.resolver.getLayerByKey(layerName);
+        preLayer.apply(requestSession);
       }
-    }
+
+      // delegate request to resource function then store result in request session
+      requestSession.resourceResult = handlerForRequest.apply(req, res);
+
+      // delegate request to appended layers
+      for (let ndx in handlerForRequest.postLayers) {
+        var layerName = handlerForRequest.postLayers[ndx];
+        var postLayer = this.resolver.getLayerByKey(layerName);
+        // if the layer is a finalLayer, we set the result for the request as it's result.
+        if (postLayer.constructor.__layerProperties__.isFinal) {
+          requestSession.setResult(postLayer.apply(requestSession));
+        } else {
+          postLayer.apply(requestSession);
+        }
+      }
+    });
 
     // end the request session, triggering the response to be sent to the client.
     requestSession.end();

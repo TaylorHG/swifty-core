@@ -17,7 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@swift-developer/swiftest": "0.0.3",
-    "@swift-developer/swifty-rest": "0.0.17",
+    "@swift-developer/swifty-rest": "0.1.0",
     "@swift-developer/swifty-serializer": "0.1.0",
     "@swift-developer/swifty-watcher": "0.1.1",
     "babel-cli": "^6.21.0",

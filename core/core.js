@@ -38,22 +38,22 @@ export default class SwiftyCore extends SwiftyObject {
   run() {
     LOGGER.info('Building Application...');
 
-    // build logger
-
     // build layers and start application listening on config port
     return new Promise((resolve, reject) => {
+
       // load handler from config and initialize it.
       var HttpManager = require(this.config.httpManager).default;
       this.set('httpManager', new HttpManager(this.get('resolver')));
 
-      // initialize the resolver
+      // initialize the resolver, this loads and compiles all modules
       this.get('resolver').init(this.config.appName).then(() => {
+
         // create connect.js application
-        var app = connect();
+        var server = connect();
 
         // gzip/deflate outgoing responses
         var compression = require('compression');
-        app.use(compression());
+        server.use(compression());
 
         // create request handler
         var requestHandler = new RequestHandler(this.get('resolver'), this.get('httpManager'));
@@ -63,12 +63,12 @@ export default class SwiftyCore extends SwiftyObject {
         LOGGER.info('');
 
         // configure connect.js to respond to all requests using the request handler
-        app.use(function(req, res) {
+        server.use(function(req, res) {
           return requestHandler.handleRequest(req, res);
         });
 
-        //create node.js http server and listen on the configured port
-        http.createServer(app).listen(this.config.port);
+        // create node.js http server and listen on the configured port
+        http.createServer(server).listen(this.config.port);
 
         LOGGER.info(`Listening for requests on port ${this.config.port}...`);
 

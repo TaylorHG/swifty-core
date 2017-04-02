@@ -1,9 +1,8 @@
 # SwiftyCore
 
-Core for the Swifty.js simple API framework.
+Core for the Swifty.js a simple API framework.
 
-If you are seeing this you are likely a hacker.
-
+Currently under Development.
 
 # Layers
 
@@ -17,12 +16,8 @@ Using Layers, you can also get a great testing experience as a developer. Layers
 
 Layers are managed via a Resolver. One of the first things an Application does when it first spawns is create a Resolver. The Resolver then manages files inside the `app` directory, compiling them and turning them into Layers. Once they have been loaded and registered with the Resolver, Layers are then set up by the Resolver. This *setup stage* involves a few things, and can vary from Layer to Layer, but dependency injection is a huge one that almost all Layers utilize. During this *setup stage*, Singleton Layers are also instantiated and loaded into the Application, for distribution throughout the app.
 
+### Little Tidbits of info
 
-TODO List for 0.1.0 Beta version:
-- Clean up files that should be ignored by npm and git
-- Move Layer States to Layer Instances
-- Protect against circular dependencies
-- Remove all these `process.cwd()` calls. Instead pass it around where needed. This allows the CLI to run projects in any directories and makes everything less brittle.
-- Better Configuration, possibly through `.js` file rather than `.json` file.
-- Allow for configuration of logger.
-- CLI to generate project
+- Layers that are used by the Swifty core are prefixed by 'core', for instance, an application's router layerKey is always 'core:router'.
+
+- The Router decides which Resources should be used to handle a request. The requestHandler decides how those Resources perform the work.
