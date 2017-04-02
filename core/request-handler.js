@@ -1,3 +1,4 @@
+import ResourceNotFound from './routing/errors/resource-not-found';
 import RequestSession from './request-session';
 
 export default class RequestHandler {
@@ -19,6 +20,10 @@ export default class RequestHandler {
 
       // get an instance of the resource to use for the request
       var resourceForRequest = this.resolver.getLayerByKey(`resource:${routingNode.blueprint.options.resource}`);
+
+      if (resourceForRequest === undefined) {
+        throw new ResourceNotFound(`resource:${routingNode.blueprint.options.resource} was not found, but should exist according to the route for ${req.url}.`);
+      }
 
       // use handler to determine the function on the resource to use to fulfill the request
       var resourceHandlerName = this.handler.findFunctionForRequest(req, resourceForRequest, resourcePath);

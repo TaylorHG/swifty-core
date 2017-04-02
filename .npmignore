@@ -1,6 +1,7 @@
 core/
 node_modules/
 debug.js
+develop.js
 .jscsrc
 .babelrc
 .eslintrc.js
@@ -11,6 +12,9 @@ npm-debug.log
 
 test-app/
 application.log
+
+.git/
+.gitignore
 
 
 FORGIVEME.md
