@@ -24,7 +24,7 @@ export default class SwiftyCore extends SwiftyObject {
     this.config = config;
 
     // initialize logger
-    initializeLogger();
+    initializeLogger(config);
 
     // build and set Resolver
     this.set('resolver', new Resolver());

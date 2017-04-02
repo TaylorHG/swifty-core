@@ -132,17 +132,17 @@ export default class LayerLoader {
     var layer = require(filePath);
 
     if (layer.default === undefined) {
-        LOGGER.error(`Module (found in ${filePath}) was not exported as default, therefore it will not be handled by the Resolver.`);
+        LOGGER.silly(`Module (found in ${filePath}) was not exported as default, therefore it will not be handled by the Resolver.`);
         return false;
     }
 
     if (layer.default.prototype.constructor.__layerProperties__ === undefined) {
-      LOGGER.error(`Layer located at: ${filePath} was missing layerProperties. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
+      LOGGER.silly(`Layer located at: ${filePath} was missing layerProperties. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
       return false;
     }
 
     if (layer.default.prototype.constructor.__setLayerKey__ === undefined) {
-      LOGGER.error(`Layer located at: ${filePath} was missing function to define layerKey. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
+      LOGGER.silly(`Layer located at: ${filePath} was missing function to define layerKey. It was either an invalid Layer, or the file was loaded by the resolver by accident.`);
       return false;
     }
 

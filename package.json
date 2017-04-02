@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@swift-developer/swifty-layer-utils": "0.1.0",
-    "@swift-developer/swifty-logger": "0.1.0",
+    "@swift-developer/swifty-logger": "0.2.0",
     "@swift-developer/swifty-objects": "0.0.1",
     "babel-core": "^6.21.0",
     "babel-preset-swifty": "^0.1.0",
